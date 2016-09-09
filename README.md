@@ -7,10 +7,12 @@
 
  * subscribe(), 订阅
  * unSubscribe(), 取消订阅
- * @Ring注解:
- *  (filter = "RingObject"),消息接收过滤字,
+ * @Ring注解: filter默认"RingFilter", policy默认"DefaultPolicy"
+ *  filter = "RingObject",消息接收过滤字,
+ *  policy = DispatchPolicy.UiPolicy, 消息接收方法在主线程调用;
+ *           DispatchPolicy.DefaultPolicy;  消息接收方法在消息发布所在线程调用
+ *           DispatchPolicy.ThreadPolicy; 消息接收方法在子线程调用
  *  receiveRingObject(RingObject object), 事件接收方法, RingObject 消息体
-
 ```java
 class SubscribeModule  {
 
@@ -25,7 +27,7 @@ class SubscribeModule  {
 	    RingSubscriber.unSubscribe(this);
     }
 
-    @Ring(filter = "RingObject")
+    @Ring(filter = "RingObject", policy = DispatchPolicy.UiPolicy)
     protected void receiveRingObject(RingObject object) {
 
         //TODO use object value
@@ -34,6 +36,7 @@ class SubscribeModule  {
 ```
 
 
+ * 消息发布
 ```java
 class RingCallModule  {
 
